@@ -71,10 +71,10 @@ func main() {
 		if i%50 == 0 && i > 49 {
 			wg.Add(1)
 
-			go func(start, end int, coords []string) {
+			go func(start, end int, coords string) {
 				defer wg.Done()
 
-				var res, err = http.Post(fmt.Sprintf(mapBoxEndpoint, mapBoxAPIKey), mapBoxContentType, bytes.NewBufferString(fmt.Sprintf(bodyCoordinates, strings.Join(coords, ";"))))
+				var res, err = http.Post(fmt.Sprintf(mapBoxEndpoint, mapBoxAPIKey), mapBoxContentType, bytes.NewBufferString(fmt.Sprintf(bodyCoordinates, coords)))
 				if err != nil {
 					panic(err)
 				}
@@ -105,10 +105,11 @@ func main() {
 					panic("len(mbRes.Matchings) < 1")
 				}
 
-				fmt.Printf("Confidence for point [%3d, %3d]: %f\n\n", start, end, mbRes.Matchings[0].Confidence)
+				fmt.Printf("Confidence for point [%3d, %3d]: %f\n", start, end, mbRes.Matchings[0].Confidence)
+
 				confidenceSum += mbRes.Matchings[0].Confidence
 				atomic.AddInt64(&amount, 1)
-			}(i-50, i, coords)
+			}(i-50, i, strings.Join(coords, ";"))
 
 			coords = []string{}
 		}
@@ -116,6 +117,5 @@ func main() {
 
 	wg.Wait()
 
-	confidenceSum /= float64(amount)
-	fmt.Printf("\nAverage Confidence: %f\n", confidenceSum)
+	fmt.Printf("\nAverage Confidence: %f\n", confidenceSum/float64(amount))
 }
