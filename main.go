@@ -82,7 +82,7 @@ func main() {
 				defer res.Body.Close()
 
 				if res.StatusCode != http.StatusOK {
-					fmt.Println("Code not 200:", res.StatusCode)
+					panic(fmt.Errorf("code not 200: %d", res.StatusCode))
 				}
 
 				body, err := ioutil.ReadAll(res.Body)
