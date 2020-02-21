@@ -1,0 +1,5 @@
+# Ignore proprietary CAN300 CSV file with lat-lng data
+sampletrip.csv
+
+# Can never be too safe ...
+*.csv
