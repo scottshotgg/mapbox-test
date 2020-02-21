@@ -105,7 +105,7 @@ func main() {
 					panic("len(mbRes.Matchings) < 1")
 				}
 
-				fmt.Printf("Confidence for point [%3d, %3d]: %f\n", start, end, mbRes.Matchings[0].Confidence)
+				fmt.Printf("Confidence for point [%3d, %3d]: %02.2f %%\n", start, end, (mbRes.Matchings[0].Confidence*10000)/100)
 
 				confidenceSum += mbRes.Matchings[0].Confidence
 				atomic.AddInt64(&amount, 1)
@@ -117,5 +117,5 @@ func main() {
 
 	wg.Wait()
 
-	fmt.Printf("\nAverage Confidence: %f\n", confidenceSum/float64(amount))
+	fmt.Printf("\nAverage Confidence: %2.2f %%\n", (confidenceSum/float64(amount)*10000)/100)
 }
